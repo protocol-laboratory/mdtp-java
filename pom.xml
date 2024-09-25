@@ -11,6 +11,7 @@
 
     <modules>
         <module>mdtp-client</module>
+        <module>mdtp-examples</module>
         <module>mdtp-server</module>
     </modules>
 
