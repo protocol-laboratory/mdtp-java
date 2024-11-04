@@ -39,6 +39,7 @@ public class MdtpServer implements Closeable {
         serverBootstrap.childHandler(new ChannelInitializer<SocketChannel>() {
             @Override
             protected void initChannel(SocketChannel socketChannel) throws Exception {
+                log.info("init channel for remote address: {}", socketChannel.remoteAddress());
             }
         });
         ChannelFuture channelFuture = serverBootstrap.bind().sync();
