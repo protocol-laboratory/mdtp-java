@@ -21,6 +21,7 @@
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <src.dir>src/main/java</src.dir>
+        <jacoco.overall.exec>${maven.multiModuleProjectDirectory}/target/jacoco/jacoco.exec</jacoco.overall.exec>
         <!-- dependency -->
         <junit.version>5.11.0</junit.version>
         <log4j.version>2.20.0</log4j.version>
@@ -99,16 +100,23 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>${jacoco-maven-plugin.version}</version>
+                <configuration>
+                    <destFile>${jacoco.overall.exec}</destFile>
+                    <dataFile>${jacoco.overall.exec}</dataFile>
+                </configuration>
                 <executions>
                     <execution>
                         <id>prepare-agent</id>
+                        <configuration>
+                            <append>true</append>
+                        </configuration>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
                     </execution>
                     <execution>
                         <id>report</id>
-                        <phase>test</phase>
+                        <phase>validate</phase>
                         <goals>
                             <goal>report</goal>
                         </goals>

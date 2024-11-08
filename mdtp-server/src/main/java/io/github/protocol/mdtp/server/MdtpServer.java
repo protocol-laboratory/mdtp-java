@@ -1,6 +1,7 @@
 package io.github.protocol.mdtp.server;
 
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.EventLoopGroup;
@@ -20,6 +21,8 @@ public class MdtpServer implements Closeable {
     private EventLoopGroup acceptorGroup;
 
     private EventLoopGroup ioGroup;
+
+    private Channel channel;
 
     public MdtpServer(MdtpServerConfig config) {
         this.config = config;
@@ -44,11 +47,19 @@ public class MdtpServer implements Closeable {
         });
         ChannelFuture channelFuture = serverBootstrap.bind().sync();
         if (channelFuture.isSuccess()) {
+            this.channel = channelFuture.channel();
             log.info("mdtp server started");
         } else {
             log.error("mdtp server start failed", channelFuture.cause());
             throw new Exception("mdtp server start failed", channelFuture.cause());
         }
+    }
+
+    public int listenPort() {
+        if (this.channel != null && this.channel.localAddress() instanceof InetSocketAddress) {
+            return ((InetSocketAddress) this.channel.localAddress()).getPort();
+        }
+        return -1;
     }
 
     @Override
