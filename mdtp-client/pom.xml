@@ -16,6 +16,11 @@
             <groupId>io.netty</groupId>
             <artifactId>netty-handler</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.github.protocol-laboratory</groupId>
+            <artifactId>mdtp-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 </project>
