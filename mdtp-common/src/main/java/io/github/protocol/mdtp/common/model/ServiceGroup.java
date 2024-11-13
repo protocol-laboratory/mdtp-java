@@ -1,4 +1,4 @@
-package iot.github.protocol.mdtp.common.model;
+package io.github.protocol.mdtp.common.model;
 
 import lombok.Getter;
 
