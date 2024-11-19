@@ -8,5 +8,6 @@ public class MdtpClientExample {
         MdtpClientConfig mdtpClientConfig = new MdtpClientConfig().host("localhost").port(4146);
         MdtpClient mdtpClient = new MdtpClient(mdtpClientConfig);
         mdtpClient.start();
+        mdtpClient.sendDeviceDiscoveryRequest(null);
     }
 }
