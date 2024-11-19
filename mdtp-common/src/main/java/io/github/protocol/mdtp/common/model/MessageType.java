@@ -16,4 +16,13 @@ public enum MessageType {
     public int getCode() {
         return code;
     }
+
+    public static MessageType fromCode(int value) {
+        for (MessageType type : MessageType.values()) {
+            if (type.getCode() == value) {
+                return type;
+            }
+        }
+        throw new IllegalArgumentException("Invalid MessageType code: " + value);
+    }
 }

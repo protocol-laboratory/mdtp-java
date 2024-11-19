@@ -1,6 +1,7 @@
 package io.github.protocol.mdtp.common;
 
 import io.github.protocol.mdtp.common.model.DeviceDiscoveryRequest;
+import io.github.protocol.mdtp.common.model.MessageBodyHeader;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +16,7 @@ public class DeviceDiscoveryRequestTest {
     @BeforeEach
     void setUp() {
         request = new DeviceDiscoveryRequest();
-        request.setMessageBodyHeader((short) 0);
+        request.setMessageBodyHeader(MessageBodyHeader.DEVICE_DISCOVERY_REQUEST);
         request.setRequestId((short) 123);
         request.setMask((byte) 0x1F);
         request.setDeviceTypeCount((byte) 3);
@@ -26,8 +27,8 @@ public class DeviceDiscoveryRequestTest {
     void testToByteBuf() {
         ByteBuf buffer = Unpooled.buffer();
 
-        request.toByteBuf(buffer);
-        assertEquals(0, buffer.readShort());
+        request.writeByteBuf(buffer);
+        assertEquals(MessageBodyHeader.DEVICE_DISCOVERY_REQUEST.toShort(), buffer.readShort());
         assertEquals( 123, buffer.readShort());
         assertEquals(0x1F, buffer.readByte());
         assertEquals(3, buffer.readByte());

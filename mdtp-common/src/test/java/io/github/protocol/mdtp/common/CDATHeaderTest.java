@@ -28,7 +28,7 @@ public class CDATHeaderTest {
     void testToByteBuf() {
         ByteBuf buffer = Unpooled.buffer();
 
-        cdatHeader.toByteBuf(buffer);
+        cdatHeader.writeByteBuf(buffer);
 
         assertEquals(1, buffer.readByte());
         assertEquals(2, buffer.readByte());
@@ -37,6 +37,30 @@ public class CDATHeaderTest {
         assertEquals(0x1F, buffer.readByte());
         assertEquals(42, buffer.readInt());
         assertEquals(7, buffer.readInt());
+
+        buffer.release();
+    }
+
+    @Test
+    void testFromByteBuf() {
+        ByteBuf buffer = Unpooled.buffer();
+        buffer.writeByte(1);
+        buffer.writeByte(2);
+        buffer.writeShort(100);
+        buffer.writeLong(123456789L);
+        buffer.writeByte((byte) 0x1F);
+        buffer.writeInt(42);
+        buffer.writeInt(7);
+
+        CDATHeader headerFromBuffer = CDATHeader.readByteBuf(buffer);
+
+        assertEquals(cdatHeader.getFormatType(), headerFromBuffer.getFormatType());
+        assertEquals(cdatHeader.getProtocolVersion(), headerFromBuffer.getProtocolVersion());
+        assertEquals(cdatHeader.getMessageLength(), headerFromBuffer.getMessageLength());
+        assertEquals(cdatHeader.getTimestamp(), headerFromBuffer.getTimestamp());
+        assertEquals(cdatHeader.getFlags(), headerFromBuffer.getFlags());
+        assertEquals(cdatHeader.getSequenceNumber(), headerFromBuffer.getSequenceNumber());
+        assertEquals(cdatHeader.getLogicalChannelId(), headerFromBuffer.getLogicalChannelId());
 
         buffer.release();
     }

@@ -1,5 +1,9 @@
 package io.github.protocol.mdtp.client;
 
+import io.github.protocol.mdtp.common.model.CDATHeader;
+import io.github.protocol.mdtp.common.model.DeviceDiscoveryRequest;
+import io.github.protocol.mdtp.common.model.MdtpPacket;
+import io.github.protocol.mdtp.common.model.MessageBodyHeader;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -17,6 +21,9 @@ public class MdtpClient implements Closeable {
     private final MdtpClientConfig config;
 
     private EventLoopGroup group;
+
+    private ChannelFuture channelFuture;
+
 
     public MdtpClient(MdtpClientConfig config) {
         this.config = config;
@@ -37,7 +44,7 @@ public class MdtpClient implements Closeable {
                     protected void initChannel(SocketChannel ch) throws Exception {
                     }
                 });
-        ChannelFuture channelFuture = bootstrap.connect().sync();
+        this.channelFuture = bootstrap.connect().sync();
         if (channelFuture.isSuccess()) {
             log.info("mdtp client started");
         } else {
@@ -54,5 +61,40 @@ public class MdtpClient implements Closeable {
         }
         this.group.shutdownGracefully();
         log.info("mdtp client closed");
+    }
+
+    public void sendDeviceDiscoveryRequest(int[] deviceTypes) {
+        log.info("start to send device discovery request.");
+        DeviceDiscoveryRequest request = new DeviceDiscoveryRequest();
+        request.setMessageBodyHeader(MessageBodyHeader.DEVICE_DISCOVERY_REQUEST);
+        request.setRequestId(request.generateRequestId());
+
+        if (deviceTypes == null) {
+            request.setDeviceTypeCount((byte) 0);
+        }
+
+        if (deviceTypes != null && deviceTypes.length > 0) {
+            request.setMask((byte) 1);
+            request.setDeviceTypeCount((byte) deviceTypes.length);
+            request.setDeviceTypes(deviceTypes);
+        }
+
+        CDATHeader cdatHeader = new CDATHeader();
+        cdatHeader.setFormatType((byte) 0x02);
+        cdatHeader.setProtocolVersion((byte) 1);
+        cdatHeader.setMessageLength((short) 0);
+        cdatHeader.setTimestamp(System.currentTimeMillis());
+        cdatHeader.setFlags((byte) 0b01100000);
+        cdatHeader.setSequenceNumber(0);
+        cdatHeader.setLogicalChannelId(0);
+
+        MdtpPacket packet = new MdtpPacket();
+        packet.setHeader(cdatHeader);
+        packet.setSecurityHeader(null);
+        packet.setBody(request);
+        packet.setSignature(null);
+
+        this.channelFuture.channel().writeAndFlush(packet.toByteBuf());
+        log.info("send device discovery request success: " + packet);
     }
 }

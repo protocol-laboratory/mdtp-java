@@ -1,6 +1,7 @@
 package io.github.protocol.mdtp.common.model;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import lombok.Data;
 
 @Data
@@ -14,13 +15,14 @@ public class MdtpPacket {
 
     private Signature signature;
 
-    public ByteBuf toByteBuf(ByteBuf buffer) {
-        header.toByteBuf(buffer);
+    public ByteBuf toByteBuf() {
+        ByteBuf buffer = Unpooled.buffer();
+        header.writeByteBuf(buffer);
         if (securityHeader != null) {
-            securityHeader.toByteBuf(buffer);
+            securityHeader.writeByteBuf(buffer);
         }
         if (body != null) {
-            body.toByteBuf(buffer);
+            body.writeByteBuf(buffer);
         }
         return buffer;
     }

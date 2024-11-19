@@ -21,7 +21,7 @@ public class SecurityHeaderTest {
     void testToByteBuf() {
         ByteBuf buffer = Unpooled.buffer();
 
-        securityHeader.toByteBuf(buffer);
+        securityHeader.writeByteBuf(buffer);
 
         assertEquals(1, buffer.readInt());
         assertEquals(2, buffer.readInt());
