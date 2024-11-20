@@ -35,4 +35,18 @@ public class CDATHeader {
         buffer.writeInt(logicalChannelId);
         return buffer;
     }
+
+    public static CDATHeader fromByteBuf(ByteBuf buffer) {
+        CDATHeader header = new CDATHeader();
+
+        header.setFormatType(buffer.readByte());
+        header.setProtocolVersion(buffer.readByte());
+        header.setMessageLength(buffer.readShort());
+        header.setTimestamp(buffer.readLong());
+        header.setFlags(buffer.readByte());
+        header.setSequenceNumber(buffer.readInt());
+        header.setLogicalChannelId(buffer.readInt());
+
+        return header;
+    }
 }

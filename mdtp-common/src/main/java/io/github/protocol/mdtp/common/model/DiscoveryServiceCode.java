@@ -16,4 +16,12 @@ public enum DiscoveryServiceCode {
         this.description = description;
     }
 
+    public static DiscoveryServiceCode fromCode(int value) {
+        for (DiscoveryServiceCode serviceCode : DiscoveryServiceCode.values()) {
+            if (serviceCode.getCode() == value) {
+                return serviceCode;
+            }
+        }
+        throw new IllegalArgumentException("Invalid DiscoveryServiceCode: " + value);
+    }
 }

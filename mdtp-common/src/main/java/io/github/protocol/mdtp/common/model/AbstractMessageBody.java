@@ -7,14 +7,7 @@ import java.util.UUID;
 
 @Data
 public abstract class AbstractMessageBody {
-    private short messageBodyHeader;
-
-    public void setMessageBodyHeader(MessageType messageType, ServiceGroup serviceGroup, DiscoveryServiceCode serviceCode) {
-        this.messageBodyHeader = 0;
-        this.messageBodyHeader |= (short) (messageType.getCode() & 0b111);
-        this.messageBodyHeader |= (short) ((serviceGroup.getCode() & 0b1111111) << 3);
-        this.messageBodyHeader |= (short) ((serviceCode.getCode() & 0b111111) << 10);
-    }
+    private MessageBodyHeader messageBodyHeader;
 
     public short generateRequestId() {
         UUID uuid = UUID.randomUUID();
@@ -22,7 +15,7 @@ public abstract class AbstractMessageBody {
     }
 
     public ByteBuf toByteBuf(ByteBuf buffer) {
-        buffer.writeShort(messageBodyHeader);
+        messageBodyHeader.toByteBuf(buffer);
         return buffer;
     }
 }
