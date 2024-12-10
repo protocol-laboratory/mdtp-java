@@ -6,7 +6,6 @@ import io.github.protocol.mdtp.common.model.MdtpPacket;
 import io.github.protocol.mdtp.common.model.SecurityHeader;
 import io.github.protocol.mdtp.common.model.Signature;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -36,13 +35,12 @@ public class MdtpPacketTest {
 
     @Test
     void testToByteBuf() {
-        ByteBuf buffer = Unpooled.buffer();
 
-        mdtpPacket.toByteBuf(buffer);
+        ByteBuf buffer = mdtpPacket.toByteBuf();
 
-        verify(mockHeader).toByteBuf(buffer);
-        verify(mockSecurityHeader).toByteBuf(buffer);
-        verify(mockBody).toByteBuf(buffer);
+        verify(mockHeader).writeByteBuf(buffer);
+        verify(mockSecurityHeader).writeByteBuf(buffer);
+        verify(mockBody).writeByteBuf(buffer);
 
         buffer.release();
     }

@@ -7,11 +7,10 @@ import lombok.Data;
 public class SecurityHeader {
     private byte[] encryptionData;
 
-    public ByteBuf toByteBuf(ByteBuf buffer) {
+    public void writeByteBuf(ByteBuf buffer) {
         for (int data : encryptionData) {
             buffer.writeInt(data);
         }
-        return buffer;
     }
 
 }

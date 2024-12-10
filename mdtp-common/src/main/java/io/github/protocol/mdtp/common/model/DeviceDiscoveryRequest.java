@@ -5,7 +5,8 @@ import lombok.Data;
 
 
 @Data
-public class DeviceDiscoveryRequest extends AbstractMessageBody {
+public class DeviceDiscoveryRequest extends AbstractMessageBody{
+
     private short requestId;
 
     private byte mask;
@@ -14,15 +15,16 @@ public class DeviceDiscoveryRequest extends AbstractMessageBody {
 
     private int[] deviceTypes;
 
-    public ByteBuf toByteBuf(ByteBuf buffer) {
-        super.toByteBuf(buffer);
+    public void writeByteBuf(ByteBuf buffer) {
+        super.writeByteBuf(buffer);
         buffer.writeShort(requestId);
         buffer.writeByte(mask);
         buffer.writeByte(deviceTypeCount);
-        for (int deviceType : deviceTypes) {
-            buffer.writeInt(deviceType);
+        if (deviceTypeCount > 0) {
+            for (int deviceType : deviceTypes) {
+                buffer.writeInt(deviceType);
+            }
         }
-        return buffer;
     }
 
     public static DeviceDiscoveryRequest fromByteBuf(ByteBuf data) {

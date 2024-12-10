@@ -35,7 +35,7 @@ public class DeviceDiscoveryResponseTest {
     void testToByteBuf() {
         ByteBuf buffer = Unpooled.buffer();
 
-        response.toByteBuf(buffer);
+        response.writeByteBuf(buffer);
 
         assertEquals(100, buffer.readShort());
         assertEquals(200, buffer.readShort());

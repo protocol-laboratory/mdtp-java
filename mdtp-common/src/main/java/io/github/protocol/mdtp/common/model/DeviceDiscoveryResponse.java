@@ -29,7 +29,7 @@ public class DeviceDiscoveryResponse {
 
     private String deviceName;
 
-    public ByteBuf toByteBuf(ByteBuf buffer) {
+    public void writeByteBuf(ByteBuf buffer) {
         buffer.writeShort(messageHeader);
         buffer.writeShort(requestId);
         buffer.writeShort(responseId);
@@ -53,7 +53,5 @@ public class DeviceDiscoveryResponse {
             byte[] nameBytes = deviceName.getBytes(StandardCharsets.UTF_8);
             buffer.writeBytes(nameBytes);
         }
-
-        return buffer;
     }
 }

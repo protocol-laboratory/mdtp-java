@@ -25,4 +25,13 @@ public enum ServiceGroup {
         this.code = code;
         this.description = description;
     }
+
+    public static ServiceGroup fromCode(int value) {
+        for (ServiceGroup group : ServiceGroup.values()) {
+            if (group.getCode() == value) {
+                return group;
+            }
+        }
+        throw new IllegalArgumentException("Invalid ServiceGroup code: " + value);
+    }
 }
