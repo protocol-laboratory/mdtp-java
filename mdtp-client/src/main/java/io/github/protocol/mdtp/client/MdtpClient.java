@@ -1,12 +1,14 @@
 package io.github.protocol.mdtp.client;
 
+import io.github.protocol.mdtp.common.codec.MdtpDecoder;
 import io.github.protocol.mdtp.common.model.CDATHeader;
+import io.github.protocol.mdtp.common.model.CDATHeaderFactory;
 import io.github.protocol.mdtp.common.model.DeviceDiscoveryRequest;
 import io.github.protocol.mdtp.common.model.MdtpPacket;
-import io.github.protocol.mdtp.common.model.MessageBodyHeader;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelPipeline;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
@@ -42,6 +44,8 @@ public class MdtpClient implements Closeable {
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
+                        ChannelPipeline pipeline = ch.pipeline();
+                        pipeline.addLast(new MdtpDecoder());
                     }
                 });
         this.channelFuture = bootstrap.connect().sync();
@@ -66,8 +70,7 @@ public class MdtpClient implements Closeable {
     public void sendDeviceDiscoveryRequest(int[] deviceTypes) {
         log.info("start to send device discovery request.");
         DeviceDiscoveryRequest request = new DeviceDiscoveryRequest();
-        request.setMessageBodyHeader(MessageBodyHeader.DEVICE_DISCOVERY_REQUEST);
-        request.setRequestId(request.generateRequestId());
+        request.setRequestId(request.generateId());
 
         if (deviceTypes == null) {
             request.setDeviceTypeCount((byte) 0);
@@ -79,14 +82,7 @@ public class MdtpClient implements Closeable {
             request.setDeviceTypes(deviceTypes);
         }
 
-        CDATHeader cdatHeader = new CDATHeader();
-        cdatHeader.setFormatType((byte) 0x02);
-        cdatHeader.setProtocolVersion((byte) 1);
-        cdatHeader.setMessageLength((short) 0);
-        cdatHeader.setTimestamp(System.currentTimeMillis());
-        cdatHeader.setFlags((byte) 0b01100000);
-        cdatHeader.setSequenceNumber(0);
-        cdatHeader.setLogicalChannelId(0);
+        CDATHeader cdatHeader = CDATHeaderFactory.createDeviceDiscoveryCDATHeader();
 
         MdtpPacket packet = new MdtpPacket();
         packet.setHeader(cdatHeader);
@@ -95,6 +91,6 @@ public class MdtpClient implements Closeable {
         packet.setSignature(null);
 
         this.channelFuture.channel().writeAndFlush(packet.toByteBuf());
-        log.info("send device discovery request success: " + packet);
+        log.info("send device discovery request success.");
     }
 }

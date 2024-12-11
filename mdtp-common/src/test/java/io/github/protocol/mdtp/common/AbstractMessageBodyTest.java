@@ -1,6 +1,7 @@
 package io.github.protocol.mdtp.common;
 
 import io.github.protocol.mdtp.common.model.AbstractMessageBody;
+import io.github.protocol.mdtp.common.model.MessageBodyHeader;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,15 +14,15 @@ public class AbstractMessageBodyTest {
 
     @BeforeEach
     void setUp() {
-        messageBody = new AbstractMessageBody(){};
+        MessageBodyHeader messageBodyHeader = new MessageBodyHeader();
+        messageBody = new AbstractMessageBody(messageBodyHeader){};
     }
 
 
     @Test
     void testGenerateRequestId() {
-        short requestId1 = messageBody.generateRequestId();
-        short requestId2 = messageBody.generateRequestId();
-
+        short requestId1 = messageBody.generateId();
+        short requestId2 = messageBody.generateId();
         assertEquals(Short.class, ((Object) requestId1).getClass());
         assertEquals(Short.class, ((Object) requestId2).getClass());
         assertNotEquals(requestId1, requestId2);
