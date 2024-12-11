@@ -9,9 +9,16 @@ import java.util.UUID;
 public abstract class AbstractMessageBody {
     private MessageBodyHeader messageBodyHeader;
 
-    public short generateRequestId() {
+    protected AbstractMessageBody () {
+    }
+
+    protected AbstractMessageBody (MessageBodyHeader messageBodyHeader) {
+        this.messageBodyHeader = messageBodyHeader;
+    }
+
+    public short generateId() {
         UUID uuid = UUID.randomUUID();
-        return (short) (uuid.getLeastSignificantBits() & 0xFFFF);
+        return (short) (uuid.getLeastSignificantBits() & 0x7FFF);
     }
 
     public void writeByteBuf(ByteBuf buffer) {

@@ -3,55 +3,31 @@ package io.github.protocol.mdtp.common.model;
 import io.netty.buffer.ByteBuf;
 import lombok.Data;
 
-import java.nio.charset.StandardCharsets;
 
 @Data
-public class DeviceDiscoveryResponse {
-    private short messageHeader;
-
+public class DeviceDiscoveryResponse extends AbstractMessageBody {
     private short requestId;
 
     private short responseId;
 
-    private byte mask;
+    private Device device;
 
-    private byte deviceStatus;
-
-    private byte addressCount;
-
-    private String[] addresses;
-
-    private short port;
-
-    private int deviceType;
-
-    private byte[] uniqueId;
-
-    private String deviceName;
+    public DeviceDiscoveryResponse() {
+        super(MessageBodyHeader.DEVICE_DISCOVERY_RESPONSE);
+    }
 
     public void writeByteBuf(ByteBuf buffer) {
-        buffer.writeShort(messageHeader);
+        super.writeByteBuf(buffer);
         buffer.writeShort(requestId);
         buffer.writeShort(responseId);
-        buffer.writeByte(mask);
-        buffer.writeByte(deviceStatus);
-        buffer.writeByte(addressCount);
+        device.writeByteBuf(buffer);
+    }
 
-        for (String address : addresses) {
-            byte[] addressBytes = address.getBytes(StandardCharsets.UTF_8);
-            buffer.writeBytes(addressBytes);
-        }
-
-        buffer.writeShort(port);
-        buffer.writeInt(deviceType);
-
-        if (uniqueId != null) {
-            buffer.writeBytes(uniqueId);
-        }
-
-        if (deviceName != null) {
-            byte[] nameBytes = deviceName.getBytes(StandardCharsets.UTF_8);
-            buffer.writeBytes(nameBytes);
-        }
+    public static DeviceDiscoveryResponse readFromBuffer(ByteBuf buffer) {
+        DeviceDiscoveryResponse response = new DeviceDiscoveryResponse();
+        response.setRequestId(buffer.readShort());
+        response.setResponseId(buffer.readShort());
+        response.setDevice(Device.readByteBuf(buffer));
+        return response;
     }
 }

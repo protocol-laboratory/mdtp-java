@@ -24,11 +24,10 @@ public class MdtpDecoder extends ByteToMessageDecoder {
         MessageBodyHeader messageBodyHeader = MessageBodyHeader.readByteBuf(in);
         MessageBodyDecoder messageDecode = MessageDecoderFactory.getDecoder(messageBodyHeader);
         AbstractMessageBody messageBody = messageDecode.handle(in);
-        messageBody.setMessageBodyHeader(messageBodyHeader);
-
         mdtpPacket.setHeader(header);
         mdtpPacket.setBody(messageBody);
 
         out.add(mdtpPacket);
+        log.info("decode packet success: {}", mdtpPacket);
     }
 }

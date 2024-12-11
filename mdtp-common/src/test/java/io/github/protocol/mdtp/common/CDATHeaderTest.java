@@ -14,7 +14,7 @@ public class CDATHeaderTest {
     @BeforeEach
     void setUp() {
         cdatHeader = new CDATHeader(
-                (byte) 1,
+                (byte) 0,
                 (byte) 2,
                 (short) 100,
                 123456789L,
@@ -30,7 +30,7 @@ public class CDATHeaderTest {
 
         cdatHeader.writeByteBuf(buffer);
 
-        assertEquals(1, buffer.readByte());
+        assertEquals(0, buffer.readByte());
         assertEquals(2, buffer.readByte());
         assertEquals(100, buffer.readShort());
         assertEquals(123456789L, buffer.readLong());
@@ -44,7 +44,7 @@ public class CDATHeaderTest {
     @Test
     void testFromByteBuf() {
         ByteBuf buffer = Unpooled.buffer();
-        buffer.writeByte(1);
+        buffer.writeByte(0);
         buffer.writeByte(2);
         buffer.writeShort(100);
         buffer.writeLong(123456789L);

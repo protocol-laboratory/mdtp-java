@@ -11,6 +11,7 @@ public class MessageDecoderFactory {
 
     static {
         decoders.put(MessageBodyHeader.DEVICE_DISCOVERY_REQUEST.toShort(), new DeviceDiscoveryRequestDecoder());
+        decoders.put(MessageBodyHeader.DEVICE_DISCOVERY_RESPONSE.toShort(), new DeviceDiscoveryResponseDecoder());
     }
 
     public static MessageBodyDecoder getDecoder(MessageBodyHeader header) {
