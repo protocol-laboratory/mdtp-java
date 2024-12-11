@@ -31,8 +31,12 @@ public class CDATHeader {
         buffer.writeShort(messageLength);
         buffer.writeLong(timestamp);
         buffer.writeByte(flags);
-        buffer.writeInt(sequenceNumber);
-        buffer.writeInt(logicalChannelId);
+        if (sequenceNumber != null) {
+            buffer.writeInt(sequenceNumber);
+        }
+        if (logicalChannelId != null) {
+            buffer.writeInt(logicalChannelId);
+        }
     }
 
     public static CDATHeader readByteBuf(ByteBuf buffer) {
@@ -43,8 +47,15 @@ public class CDATHeader {
         header.setMessageLength(buffer.readShort());
         header.setTimestamp(buffer.readLong());
         header.setFlags(buffer.readByte());
-        header.setSequenceNumber(buffer.readInt());
-        header.setLogicalChannelId(buffer.readInt());
+        byte formatType = header.getFormatType();
+
+        if (formatType == 0x00) {
+            header.setSequenceNumber(buffer.readInt());
+            header.setLogicalChannelId(buffer.readInt());
+        } else if (formatType == 0x02) {
+            header.setSequenceNumber(null);
+            header.setLogicalChannelId(null);
+        }
 
         return header;
     }
