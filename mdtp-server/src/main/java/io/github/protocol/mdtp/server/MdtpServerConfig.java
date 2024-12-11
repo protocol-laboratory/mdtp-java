@@ -1,17 +1,12 @@
 package io.github.protocol.mdtp.server;
 
+import io.github.protocol.mdtp.common.model.Device;
+
 public class MdtpServerConfig {
-    public String host;
+    public Device device;
 
-    public int port;
-
-    public MdtpServerConfig host(String host) {
-        this.host = host;
-        return this;
-    }
-
-    public MdtpServerConfig port(int port) {
-        this.port = port;
+    public MdtpServerConfig device(Device device) {
+        this.device = device;
         return this;
     }
 }

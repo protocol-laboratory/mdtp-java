@@ -16,7 +16,6 @@ public class DeviceDiscoveryRequestTest {
     @BeforeEach
     void setUp() {
         request = new DeviceDiscoveryRequest();
-        request.setMessageBodyHeader(MessageBodyHeader.DEVICE_DISCOVERY_REQUEST);
         request.setRequestId((short) 123);
         request.setMask((byte) 0x1F);
         request.setDeviceTypeCount((byte) 3);
